@@ -1,49 +1,118 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Rooster Berkel</title>
+<meta charset="UTF-8">
+<title>Rooster Berkel</title>
 </head>
 <body>
 
 <h1>Rooster Berkel</h1>
 
-<h2>Login</h2>
 <input id="name" placeholder="Naam">
-<button onclick="login()">Inloggen</button>
+<button onclick="login()">Login</button>
 
 <div id="app" style="display:none;">
-  <h2>Rooster</h2>
 
-  <div>
-    Maandag - Receptioniste:
-    <select id="ma_receptie">
-      <option>Helga</option>
-      <option>Christiane</option>
-      <option>Ciska</option>
-    </select>
-  </div>
+<h2>Rooster</h2>
 
-  <h2>Vrij aanvragen</h2>
-  <button onclick="requestDayOff()">Vraag vrije dag aan</button>
+<select id="role">
+  <option>Receptioniste</option>
+  <option>Omloop</option>
+  <option>Assistent</option>
+</select>
 
-  <h2>Historie</h2>
-  <div id="history"></div>
+<select id="employee"></select>
+
+<button onclick="save()">Opslaan</button>
+
+<h2>Vrij aanvragen</h2>
+<button onclick="request()">Vraag vrije dag aan</button>
+
+<h2>Historie</h2>
+<div id="history"></div>
+
 </div>
 
 <script>
+
+const employees = [
+  {name:"Sandra", type:"admin"},
+  {name:"Helga", type:"vast"},
+  {name:"Christiane", type:"vast"},
+  {name:"Ciska", type:"vast"},
+  {name:"Mihaela", type:"vast"},
+  {name:"Mary", type:"oproep"},
+  {name:"Annet", type:"oproep"},
+  {name:"Daphna", type:"oproep"},
+  {name:"Lusia", type:"oproep"}
+];
+
 let user = "";
 
-function login() {
+function login(){
   user = document.getElementById("name").value;
   document.getElementById("app").style.display = "block";
+
+  const select = document.getElementById("employee");
+  select.innerHTML = "";
+
+  employees.forEach(e=>{
+    const opt = document.createElement("option");
+    opt.value = e.name;
+    opt.text = e.name;
+    select.appendChild(opt);
+  });
+
+  loadHistory();
 }
 
-function requestDayOff() {
-  const msg = user + " vraagt een vrije dag aan";
-  document.getElementById("history").innerHTML += "<p>" + msg + "</p>";
-  alert("Mail gestuurd naar Sandra");
+function save(){
+  if(user !== "Sandra"){
+    alert("Alleen Sandra mag wijzigen");
+    return;
+  }
+
+  const role = document.getElementById("role").value;
+  const emp = document.getElementById("employee").value;
+
+  const selected = employees.find(e=>e.name===emp);
+
+  if(selected.type === "oproep" && role !== "Assistent"){
+    alert("Oproepkrachten alleen assistent");
+    return;
+  }
+
+  const msg = emp + " ingepland als " + role;
+  addHistory(msg);
 }
+
+function request(){
+  const msg = user + " vraagt vrij";
+  addHistory(msg);
+  alert("Mail naar Sandra gestuurd");
+}
+
+function addHistory(text){
+  let history = JSON.parse(localStorage.getItem("history") || "[]");
+  history.push(text);
+  localStorage.setItem("history", JSON.stringify(history));
+  renderHistory();
+}
+
+function loadHistory(){
+  renderHistory();
+}
+
+function renderHistory(){
+  const history = JSON.parse(localStorage.getItem("history") || "[]");
+  const div = document.getElementById("history");
+  div.innerHTML = "";
+
+  history.forEach(h=>{
+    div.innerHTML += "<p>"+h+"</p>";
+  });
+}
+
 </script>
 
 </body>
