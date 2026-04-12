@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Rooster Berkel</title>
+</head>
+<body>
+
+<h1>Rooster Berkel (Bekijk)</h1>
+
+<h2>Historie</h2>
+<div id="history"></div>
+
+<script>
+function renderHistory(){
+  const history = JSON.parse(localStorage.getItem("history") || "[]");
+  const div = document.getElementById("history");
+  div.innerHTML = "";
+
+  history.forEach(h=>{
+    div.innerHTML += "<p>"+h+"</p>";
+  });
+}
+
+renderHistory();
+</script>
+
+</body>
+</html>
