@@ -3,53 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <title>Rooster Berkel</title>
-  <style>
-    body {
-      font-family: Arial;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-    h1 {
-      color: #333;
-    }
-    .card {
-      background: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-    }
-    select {
-      padding: 5px;
-    }
-  </style>
 </head>
 <body>
 
 <h1>Rooster Berkel</h1>
 
-<div class="card">
-  <h2>Maandag</h2>
-  Receptioniste:
-  <select>
-    <option>Helga</option>
-    <option>Christiane</option>
-    <option>Ciska</option>
-  </select>
-</div>
+<h2>Login</h2>
+<input id="name" placeholder="Naam">
+<button onclick="login()">Inloggen</button>
 
-<div class="card">
-  <h2>Dinsdag</h2>
-  <p><b>Ochtend:</b> Ciska (receptie)</p>
-  <p><b>Middag:</b> Helga (receptie), Ciska (omloop)</p>
-  <p><b>Avond:</b> Helga (receptie + omloop)</p>
-</div>
+<div id="app" style="display:none;">
+  <h2>Rooster</h2>
 
-<div class="card">
+  <div>
+    Maandag - Receptioniste:
+    <select id="ma_receptie">
+      <option>Helga</option>
+      <option>Christiane</option>
+      <option>Ciska</option>
+    </select>
+  </div>
+
   <h2>Vrij aanvragen</h2>
-  <button onclick="alert('Mail wordt gestuurd naar Sandra')">
-    Vraag vrije dag aan
-  </button>
+  <button onclick="requestDayOff()">Vraag vrije dag aan</button>
+
+  <h2>Historie</h2>
+  <div id="history"></div>
 </div>
+
+<script>
+let user = "";
+
+function login() {
+  user = document.getElementById("name").value;
+  document.getElementById("app").style.display = "block";
+}
+
+function requestDayOff() {
+  const msg = user + " vraagt een vrije dag aan";
+  document.getElementById("history").innerHTML += "<p>" + msg + "</p>";
+  alert("Mail gestuurd naar Sandra");
+}
+</script>
 
 </body>
 </html>
