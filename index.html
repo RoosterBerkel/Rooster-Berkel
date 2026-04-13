@@ -35,6 +35,8 @@
 
 <script>
 
+const scriptURL = "PASTE_HIER_JOUW_URL";
+
 const employees = [
   {name:"Sandra", type:"admin"},
   {name:"Helga", type:"vast"},
@@ -50,8 +52,15 @@ const employees = [
 let user = "";
 
 function login(){
-  function login(){
-  user = document.getElementById("name").value;
+  const input = document.getElementById("name").value;
+
+  if(!input){
+    alert("Vul je naam in");
+    return;
+  }
+
+  user = input;
+
   document.getElementById("app").style.display = "block";
 
   const select = document.getElementById("employee");
@@ -66,3 +75,67 @@ function login(){
 
   loadHistory();
 }
+
+function save(){
+  if(user !== "Sandra"){
+    alert("Alleen Sandra mag wijzigen");
+    return;
+  }
+
+  const role = document.getElementById("role").value;
+  const emp = document.getElementById("employee").value;
+
+  const selected = employees.find(e=>e.name===emp);
+
+  if(selected.type === "oproep" && role !== "Assistent"){
+    alert("Oproepkrachten alleen assistent");
+    return;
+  }
+
+  const msg = emp + " ingepland als " + role;
+
+  addHistory(msg);
+}
+
+function request(){
+  const msg = user + " vraagt vrij";
+
+  addHistory(msg);
+
+  alert("Aanvraag verstuurd");
+}
+
+function addHistory(text){
+
+  let history = JSON.parse(localStorage.getItem("history") || "[]");
+  history.push(text);
+  localStorage.setItem("history", JSON.stringify(history));
+  renderHistory();
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: text
+    })
+  });
+
+}
+
+function loadHistory(){
+  renderHistory();
+}
+
+function renderHistory(){
+  const history = JSON.parse(localStorage.getItem("history") || "[]");
+  const div = document.getElementById("history");
+  div.innerHTML = "";
+
+  history.forEach(h=>{
+    div.innerHTML += "<p>"+h+"</p>";
+  });
+}
+
+</script>
+
+</body>
+</html>
