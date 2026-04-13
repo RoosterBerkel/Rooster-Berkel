@@ -50,6 +50,7 @@ const employees = [
 let user = "";
 
 function login(){
+  function login(){
   user = document.getElementById("name").value;
   document.getElementById("app").style.display = "block";
 
@@ -65,65 +66,3 @@ function login(){
 
   loadHistory();
 }
-
-function save(){
-  if(user !== "Sandra"){
-    alert("Alleen Sandra mag wijzigen");
-    return;
-  }
-
-  const role = document.getElementById("role").value;
-  const emp = document.getElementById("employee").value;
-
-  const selected = employees.find(e=>e.name===emp);
-
-  if(selected.type === "oproep" && role !== "Assistent"){
-    alert("Oproepkrachten alleen assistent");
-    return;
-  }
-
-  const msg = emp + " ingepland als " + role;
-  addHistory(msg);
-}
-
-function request(){
-  const msg = user + " vraagt vrij";
-  addHistory(msg);
-  alert("Mail naar Sandra gestuurd");
-}
-function addHistory(text){
-
-  // lokaal opslaan (zoals je al had)
-  let history = JSON.parse(localStorage.getItem("history") || "[]");
-  history.push(text);
-  localStorage.setItem("history", JSON.stringify(history));
-  renderHistory();
-
-  // 🔥 NIEUW: naar Google Sheet sturen
-  fetch("https://script.google.com/macros/s/AKfycbxxxxxxx/exec", {    method: "POST",
-    body: JSON.stringify({
-      action: text
-    })
-  });
-
-}
-}
-
-function loadHistory(){
-  renderHistory();
-}
-
-function renderHistory(){
-  const history = JSON.parse(localStorage.getItem("history") || "[]");
-  const div = document.getElementById("history");
-  div.innerHTML = "";
-
-  history.forEach(h=>{
-    div.innerHTML += "<p>"+h+"</p>";
-  });
-}
-
-</script>
-
-</body>
-</html>
