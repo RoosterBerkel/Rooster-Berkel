@@ -91,12 +91,22 @@ function request(){
   addHistory(msg);
   alert("Mail naar Sandra gestuurd");
 }
-
 function addHistory(text){
+
+  // lokaal opslaan (zoals je al had)
   let history = JSON.parse(localStorage.getItem("history") || "[]");
   history.push(text);
   localStorage.setItem("history", JSON.stringify(history));
   renderHistory();
+
+  // 🔥 NIEUW: naar Google Sheet sturen
+  fetch("https://script.google.com/macros/s/AKfycbxxxxxxx/exec", {    method: "POST",
+    body: JSON.stringify({
+      action: text
+    })
+  });
+
+}
 }
 
 function loadHistory(){
